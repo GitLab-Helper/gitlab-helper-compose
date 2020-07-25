@@ -54,17 +54,19 @@ services:
         image: "adrixop95/gitlab-helper-backend:development"
         container_name: "gitlab_helper_backend"
         environment:
-            - PRIVATE_TOKEN=urToken
-            - GITLAB_URL=https://gitlab.com/
+            - SECRET_KEY=urSecretKey
         labels:
             - traefik.enable=true
-            - traefik.http.routers.gitlab_helper_backend.rule=Host(`${URL}`) && PathPrefix (`/groups`,`/api`)
-            - traefik.http.services.gitlab_helper_backend.loadbalancer.server.port=8005
+            - traefik.http.routers.gitlab_helper_backend.rule=Host(`${URL}`) && PathPrefix(`/api`)
+            - traefik.http.services.gitlab_helper_backend.loadbalancer.server.port=8000
             - traefik.http.routers.gitlab_helper_backend.entrypoints=web-secure
             - traefik.http.middlewares.gitlab_helper_backend.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH
             - traefik.http.middlewares.gitlab_helper_backend.headers.accesscontrolalloworigin=origin-list-or-null
             - traefik.http.middlewares.gitlab_helper_backend.headers.accesscontrolmaxage=100
             - traefik.http.middlewares.gitlab_helper_backend.headers.addvaryheader=true
+            - traefik.http.routers.gitlab_helper_backend.middlewares=gitlab_helper_backend-stripprefix
+            - traefik.http.middlewares.gitlab_helper_backend-stripprefix.stripprefix.prefixes=/api
+            - traefik.http.middlewares.gitlab_helper_backend-stripprefix.stripprefix.forceslash=false
             - traefik.http.routers.gitlab_helper_backend.tls=true
             - traefik.http.routers.gitlab_helper_backend.tls.certresolver=letsencrypt
             - com.centurylinklabs.watchtower.enable=true
