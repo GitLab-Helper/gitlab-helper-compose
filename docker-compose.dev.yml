@@ -12,8 +12,9 @@ services:
             - "--entrypoints.web.forwardedheaders.insecure"
             - "--entrypoints.web.proxyprotocol.insecure"
             - "--certificatesresolvers.letsencrypt.acme.email=adrixop95@gmail.com"
-            - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
+            - "--certificatesresolvers.letsencrypt.acme.storage=/ssl/acme.json"
             - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+            - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
         labels:
             - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
             - "traefik.http.routers.http-catchall.entrypoints=web"

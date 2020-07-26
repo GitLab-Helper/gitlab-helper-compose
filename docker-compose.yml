@@ -12,7 +12,7 @@ services:
             - "--entrypoints.web.forwardedheaders.insecure"
             - "--entrypoints.web.proxyprotocol.insecure"
             - "--certificatesresolvers.letsencrypt.acme.email=adrixop95@gmail.com"
-            - "--certificatesresolvers.letsencrypt.acme.storage=/acme.json"
+            - "--certificatesresolvers.letsencrypt.acme.storage=/ssl/acme.json"
             - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
         labels:
             - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
@@ -21,6 +21,7 @@ services:
             - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            - "traefik_le:/ssl"
         ports:
             - "80:80"
             - "443:443"
@@ -68,6 +69,9 @@ services:
         networks:
             - gitlab_helper_network
         restart: unless-stopped
+
+volumes: 
+    traefik_le:
 
 networks:
     gitlab_helper_network:
