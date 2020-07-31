@@ -14,7 +14,6 @@ services:
             - "--certificatesresolvers.letsencrypt.acme.email=adrixop95@gmail.com"
             - "--certificatesresolvers.letsencrypt.acme.storage=/ssl/acme.json"
             - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-            - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
         labels:
             - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
             - "traefik.http.routers.http-catchall.entrypoints=web"
@@ -54,8 +53,6 @@ services:
     gitlab_helper_backend:
         image: "adrixop95/gitlab-helper-backend:development"
         container_name: "gitlab_helper_backend"
-        environment:
-            - SECRET_KEY=urSecretKey
         labels:
             - traefik.enable=true
             - traefik.http.routers.gitlab_helper_backend.rule=Host(`${URL}`) && PathPrefix(`/api`)
