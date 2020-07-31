@@ -87,6 +87,7 @@ services:
 
 volumes: 
     traefik_le:
+
 networks:
     gitlab_helper_network:
         name: gitlab_helper_network
