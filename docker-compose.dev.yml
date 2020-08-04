@@ -73,6 +73,28 @@ services:
             - gitlab_helper_network
         restart: unless-stopped
 
+    gitlab_helper_dozzle:
+        image: "amir20/dozzle:latest"
+        container_name: "gitlab_helper_dozzle"
+        restart: unless-stopped
+        environment:
+            - DOZZLE_BASE=/logs
+        labels:
+            - traefik.http.routers.gitlab_helper_dozzle.rule=Host(`${URL}`) && PathPrefix (`/logs`)
+            - traefik.http.services.gitlab_helper_dozzle.loadbalancer.server.port=8080
+            - traefik.http.routers.gitlab_helper_dozzle.entrypoints=web-secure
+            - traefik.http.middlewares.gitlab_helper_dozzle.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH
+            - traefik.http.middlewares.gitlab_helper_dozzle.headers.accesscontrolalloworigin=origin-list-or-null
+            - traefik.http.middlewares.gitlab_helper_dozzle.headers.accesscontrolmaxage=100
+            - traefik.http.middlewares.gitlab_helper_dozzle.headers.addvaryheader=true
+            - traefik.http.routers.gitlab_helper_dozzle.tls=true
+            - traefik.http.routers.gitlab_helper_dozzle.tls.certresolver=letsencrypt      
+            - com.centurylinklabs.watchtower.enable=false
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - gitlab_helper_network
+
     gitlab_helper_watchtower:
         image: "containrrr/watchtower"
         container_name: "gitlab_helper_watchtower"
