@@ -31,7 +31,7 @@ services:
         restart: unless-stopped
 
     gitlab_helper_frontend:
-        image: "adrixop95/gitlab-helper-frontend:development"
+        image: "docker.pkg.github.com/gitlab-helper/gitlab-helper-frontend/gitlabhelper-frontend:development"
         container_name: "gitlab_helper_frontend"
         environment: 
             - HOSTNAME=${http}://${URL}/
@@ -52,7 +52,7 @@ services:
         restart: unless-stopped
 
     gitlab_helper_backend:
-        image: "adrixop95/gitlab-helper-backend:development"
+        image: "docker.pkg.github.com/gitlab-helper/gitlab-helper-backend/gitlabhelper:development"
         container_name: "gitlab_helper_backend"
         labels:
             - traefik.enable=true
