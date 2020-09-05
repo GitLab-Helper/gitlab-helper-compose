@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab-helper
+  labels:
+    app: gitlab-helper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab-helper
+  template:
+    metadata:
+      labels:
+        app: gitlab-helper
+    spec:
+      containers:
+        - name: gitlab-helper-frontend
+          image: adrixop95/gitlab-helper-frontend:development
+          env:
+            - name: HOSTNAME
+              value: https://localhost/api/
+        - name: gitlab-helper-backend
+          image: adrixop95/gitlab-helper-backend:development
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-helper-service
+spec:
+  selector:
+    app: gitlab-helper
+  ports:
+    - protocol: TCP
+      port: 80
+      name: frontend
+    - protocol: TCP
+      port: 8000
+      name: backend
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-tls
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`localhost`)
+      services:
+        - name: gitlab-helper-service
+          port: 80
+    - kind: Rule
+      match: Host(`localhost`) && PathPrefix(`/api`)
+      services:
+        - name: gitlab-helper-service
+          port: 8000
+      middlewares:
+        - name: app-tls-stripprefix
+  tls:
+    certResolver: le
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: app-tls-stripprefix
+spec:
+  stripPrefix:
+    prefixes:
+      - "/api"
