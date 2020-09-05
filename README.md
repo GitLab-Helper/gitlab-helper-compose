@@ -30,7 +30,7 @@ Docker-compose stack has additional services configured, `amir20/dozzle` availab
 Without changing the configuration and parameters, the application will be available at: `https://localhost`.
 
 ## Kubernetes
-Running the application using kubernetes requires having installed helm and installing a traefic with it.  
+Running the application using kubernetes requires having installed helm and installing a traefik with it.  
 Installation of the traefik can be performed using the following commands:
 ```
 $ helm repo add traefik https://containous.github.io/traefik-helm-chart
