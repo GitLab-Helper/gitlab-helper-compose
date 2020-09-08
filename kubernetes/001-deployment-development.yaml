@@ -5,7 +5,7 @@ metadata:
   labels:
     app: gitlab-helper
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: gitlab-helper
